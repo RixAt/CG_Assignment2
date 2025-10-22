@@ -1,6 +1,7 @@
 name: Build
 
-on: push:
+on: 
+    push:
     pull_request:
     
 jobs:
@@ -11,7 +12,7 @@ jobs:
             - uses: actions/checkout@v4
   
             - name: Install vcpkg and dependencies
-              uses: microsoft/vcpkg-action@v0
+              uses: actions/vcpkg-action@v0.9.2
               with: 
                 triplet: x64-windows
                 vcpkgArguments: freeglut

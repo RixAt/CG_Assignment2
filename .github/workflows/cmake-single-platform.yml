@@ -24,7 +24,7 @@ jobs:
 
       - name: Configure CMake (Release)
         run: >
-          cmake -B build -S .
+          cmake -B build -S CG_Assignment2
           -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
           -DCMAKE_BUILD_TYPE=Release
 
@@ -53,7 +53,7 @@ jobs:
 
       - name: Configure CMake (Release)
         run: >
-          cmake -B build -S .
+          cmake -B build -S CG_Assignment2
           -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
           -DCMAKE_BUILD_TYPE=Release
 

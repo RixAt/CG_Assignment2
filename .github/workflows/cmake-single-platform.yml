@@ -10,13 +10,17 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+  
+      - name: Get vcpkg
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg "$env:GITHUB_WORKSPACE/vcpkg"
+          & "$env:GITHUB_WORKSPACE/vcpkg/bootstrap-vcpkg.bat"
 
-      # Install vcpkg and the dependency
-      - name: Install vcpkg and dependencies
-        uses: microsoft/vcpkg-action@v0.9.2
-        with:
-          triplet: x64-windows
-          vcpkgArguments: install freeglut
+      - name: Install deps (freeglut)
+        shell: pwsh
+        run: |
+          & "$env:GITHUB_WORKSPACE/vcpkg/vcpkg.exe" install freeglut:x64-windows
 
       - name: Configure CMake (Release)
         run: >

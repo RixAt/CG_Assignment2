@@ -20,7 +20,14 @@
 */
 // ====================================================================
 // ====================================================================
-#include <windows.h>
+#ifdef _WIN32
+	#include <windows.h>
+	#pragma comment(lib, "winmm.lib") // Link the Windows multimedia library for sound
+#else
+inline void PlaySound(const char*, void*, unsigned int) {} // Dummy function for non - Windows platforms
+	#define TEXT(x) x
+#endif
+
 #include <GL/glut.h>
 #include <iostream>
 #include <cmath>
@@ -489,7 +496,10 @@ static void UpdateAnim(int value) {
 // BONUS: Sets up disco lighting if discoMode is enabled
 // Enables a single, colorful moving light that orbits the scene
 static void SetupDiscoLighting() {
-	if (!discoMode) return;
+	if (!discoMode) {
+		glDisable(GL_LIGHT0); 
+		return;
+	}
 	glEnable(GL_LIGHT0);
 	lightPhase += 0.03f;
 
@@ -583,7 +593,7 @@ static void InitScene() {
 		float dx = x1 - x2, dz = z1 - z2; return dx * dx + dz * dz < minDist * minDist;
 		};
 
-	const float MIN_DIST = 2.5f; // Minimum distance between robots
+	const float MIN_DIST = 5.0f; // Minimum distance between robots
 	for (int i = 0; i < ROBOT_COUNT; ++i) {
 		Robot r;
 		int tries = 0; // Checks to find a non-colliding position for the robots
@@ -650,12 +660,16 @@ static void KeyboardInput(unsigned char key, int x, int y) {
 		dancing = !dancing;
 		musicToggle = dancing; // Sync music with dancing
 		std::cout << "[Flag] dancing: " << (dancing ? "ON" : "OFF") << std::endl;
+#ifdef _WIN32
 		if (musicToggle) {
 			PlaySound(TEXT("dance1.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 		}
 		else {
 			PlaySound(NULL, 0, 0);
 		}
+#endif // _WIN32
+
+
 		glutPostRedisplay();
 		break;
 	case 'm':
@@ -698,7 +712,9 @@ static void KeyboardInput(unsigned char key, int x, int y) {
 		break;
 	case 'q': // Quit with either 'q' or ESC
 	case 27:  // ESCAPE key
+	#ifdef _WIN32
 		PlaySound(NULL, 0, 0); // Stop any playing sound
+	#endif // DEBUG
 		exit(0);
 		break;
 	default:
